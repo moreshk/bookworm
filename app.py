@@ -20,7 +20,7 @@ ELEVENLABS_VOICE_SIMILARITY = 0.75
 
 # Choose your favorite ElevenLabs voice
 ELEVENLABS_VOICE_NAME = "Raj"
-ELEVENLABS_ALL_VOICES = []
+# ELEVENLABS_ALL_VOICES = []
 
 app = Flask(__name__)
 
@@ -75,19 +75,10 @@ def generate_reply(conversation: list) -> str:
     response = openai.ChatCompletion.create(
       model="gpt-3.5-turbo",
       messages=[
-            # {"role": "system", "content": "You are a Hindi tutor whose role is to help a kid learn Hindi. Your objective is to engage the kid in a conversation that helps him or her learn Hindi. You can do this by asking questions like what is a house called in Hindi? and see if the child responds correctly. If they do you congratulate and encourage them, if they do not tell the correct answer and be encouraging regardless. Help the kid in coming up with correct pronunciations and come up with any other new ways to help the kid learn Hindi. Continue to engage the kid in a conversation and help him learn new words in Hindi in this manner."},
-            # {"role": "system", "content": "Your role is a reading tutor character called Bookworm from a story book. Your objective is to help a 7 year kid get better at reading while also providing entertaining companionsip to the kid. You should tell short stories and keep each response 2 to 3 lines only. After each response request the kid to read back to you the most complex word in what you just wrote as part of the story. If the kids response is close enough, congratulate him or her and continue with the story. If they do not seem to be accurate, sound the word out syllable by syllable for the childs reference and ask them to repeat. If they are inaccurate even after a couple of attempts be encouraging either way and continue with the story. Start the conversation by asking the kid their name, so that you can address them by their name as you narrate the story. Remember to keep your responses short (2-3 lines at a time)."},
                 {
                     "role": "system", 
                     "content": (
-                    "Your role is a reading tutor character called Bookworm from a story book. Your objective is to help a 7 year kid "
-                    "get better at reading while also providing entertaining companionsip to the kid. You should tell short stories and "
-                    "keep each response 1 to 2 lines only. After each response pick the most complex word "
-                    "in what you just wrote as part of the story and ask the kid to read it back to you. If the kids response is close enough, congratulate him or her and "
-                    "continue with the story. If they do not seem to be accurate, sound the word out syllable by syllable very slowly for the childs "
-                    "reference and ask them to repeat. If they are inaccurate even after a couple of attempts be encouraging either way "
-                    "and continue with the story. Start the conversation by asking the kid their name, so that you can address them by "
-                    "their name as you narrate the story. Remember to keep your responses very short (1-2 lines maximum only at a time).")
+                    "Your are Sonic, the worlds fastest Hedgehog. Your role is to be a childrens companion. You will tell funny jokes and quips about your adventures, try to keep the kid engaged. Keep your responses relatively short.")
                 }
 
         ] + conversation,
@@ -106,13 +97,15 @@ def generate_audio(text: str, output_path: str = "") -> str:
     :returns: The output path for the successfully saved file.
     :rtype: str
     """
-    voices = ELEVENLABS_ALL_VOICES
-    try:
-        voice_id = next(filter(lambda v: v["name"] == ELEVENLABS_VOICE_NAME, voices))["voice_id"]
-    except StopIteration:
-        voice_id = voices[0]["voice_id"]
-        voice_id = "41Zt72AmIqyFy77mLmsn"
-        # voice_id = "wW6Wydk4CWSgIsxSzHGq"
+    # voices = ELEVENLABS_ALL_VOICES
+    # try:
+    #     voice_id = next(filter(lambda v: v["name"] == ELEVENLABS_VOICE_NAME, voices))["voice_id"]
+    # except StopIteration:
+    #     voice_id = voices[0]["voice_id"]
+    #     voice_id = "B0sDakOCRhhcSbDc0U2d"
+    #     # voice_id = "wW6Wydk4CWSgIsxSzHGq"
+
+    voice_id = "B0sDakOCRhhcSbDc0U2d"
 
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
     headers = {
@@ -189,11 +182,11 @@ def listen(filename):
     return send_file(f"outputs/{filename}", mimetype="audio/mp3", as_attachment=False)
 
 
-if ELEVENLABS_API_KEY:
-    if not ELEVENLABS_ALL_VOICES:
-        ELEVENLABS_ALL_VOICES = get_voices()
-    if not ELEVENLABS_VOICE_NAME:
-        ELEVENLABS_VOICE_NAME = ELEVENLABS_ALL_VOICES[0]["name"]
+# if ELEVENLABS_API_KEY:
+#     if not ELEVENLABS_ALL_VOICES:
+#         ELEVENLABS_ALL_VOICES = get_voices()
+#     if not ELEVENLABS_VOICE_NAME:
+#         ELEVENLABS_VOICE_NAME = ELEVENLABS_ALL_VOICES[0]["name"]
 
 if __name__ == '__main__':
     app.run()

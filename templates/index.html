@@ -2,7 +2,7 @@
 <html data-bs-theme="light">
 
 <head>
-    <title>Bookworm</title>
+    <title>Sonic</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -47,8 +47,8 @@
         <div class="row">
             <div class="col-12 col-md-6 col-xl-4 mx-auto">
                 <!-- <img class="mb-3" src="/static/jollybeard.png" alt="" style="height:250px"> -->
-                <img id="jollybeard-img" class="mb-3" src="/static/bookworm.png" alt="" style="height:250px">
-                <h1 class="mb-4">Bookworm</h1>
+                <img id="jollybeard-img" class="mb-3" src="/static/sonic.png" alt="" style="height:250px">
+                <h1 class="mb-4">Sonic the Hedgehog</h1>
                 <form>
                     <div class="form-group mb-3">
                         <textarea id="transcription-box" class="form-control" rows="3"
@@ -113,14 +113,15 @@
                             cursorChar: "▊",
                         }).go();
                         // Change the image to the animated GIF when the voice-over starts
-                        $("#jollybeard-img").attr("src", "/static/bookworm.gif");
+                        $("#jollybeard-img").attr("src", "/static/looper.gif");
+                        $("#jollybeard-img").css("height", "312.5px");  // 250px * 1.25 = 312.5px
 
                         audioElement.src = fileURL;
                         audioElement.controls = true;
                         audioElement.play();
                         // Add an event listener to change the image back to static when the voice-over ends
                         audioElement.onended = function () {
-                            $("#jollybeard-img").attr("src", "/static/bookworm.png");
+                            $("#jollybeard-img").attr("src", "/static/sonic.png");
                         };
                         enableButton(recordButton);
                         enableButton(askButton);
@@ -130,10 +131,53 @@
             });
 
 
-            // Initialize MediaRecorder
-            let chunks = [];
-            let recording = false;
-            let mediaRecorder;
+            // // Initialize MediaRecorder
+            // let chunks = [];
+            // let recording = false;
+            // let mediaRecorder;
+            // navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+            //     mediaRecorder = new MediaRecorder(stream);
+            //     mediaRecorder.ondataavailable = (event) => {
+            //         chunks.push(event.data);
+            //     };
+            //     mediaRecorder.onstop = () => {
+            //         disableButton(recordButton);
+            //         recordButton[0].innerHTML = "Transcribing...";
+            //         const audioData = new Blob(chunks, { type: 'audio/wav' });
+            //         const formData = new FormData();
+            //         formData.append('file', audioData, 'audio.wav');
+            //         $.ajax({
+            //             type: 'POST',
+            //             url: '/transcribe',
+            //             data: formData,
+            //             contentType: false,
+            //             processData: false,
+            //             success: (data) => {
+            //                 transcriptionBox.val(data.text);
+            //                 enableButton(recordButton);
+            //                 recordButton[0].innerHTML = "Record";
+            //                 // askButton.click();
+            //                 // Trigger the functionality that was previously tied to the "Ask" button
+            //                 askQuestionAndPlayAudio();
+            //             }
+            //         });
+            //     };
+            // });
+
+            // // Record audio when record button is clicked
+            // recordButton.click(() => {
+            //     if (recording) {
+            //         mediaRecorder.stop();
+            //         recording = false;
+            //     } else {
+            //         recordButton[0].innerHTML = "Recording...";
+            //         chunks = [];
+            //         mediaRecorder.start();
+            //         recording = true;
+            //     }
+            // });
+
+
             navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.ondataavailable = (event) => {
@@ -155,26 +199,27 @@
                             transcriptionBox.val(data.text);
                             enableButton(recordButton);
                             recordButton[0].innerHTML = "Record";
-                            // askButton.click();
-                            // Trigger the functionality that was previously tied to the "Ask" button
-                            askQuestionAndPlayAudio();
+                            askQuestionAndPlayAudio(); // Trigger the functionality
                         }
                     });
                 };
             });
 
-            // Record audio when record button is clicked
-            recordButton.click(() => {
-                if (recording) {
-                    mediaRecorder.stop();
-                    recording = false;
-                } else {
-                    recordButton[0].innerHTML = "Recording...";
-                    chunks = [];
-                    mediaRecorder.start();
-                    recording = true;
-                }
+            // Record audio when record button is pressed and held
+            recordButton.mousedown(() => {
+                recordButton[0].innerHTML = "Recording...";
+                chunks = [];
+                mediaRecorder.start();
+                recording = true;
             });
+
+            // Stop recording when record button is released
+            recordButton.mouseup(() => {
+                mediaRecorder.stop();
+                recording = false;
+            });
+
+            // ... rest of the code
 
             // Function to ask question and play audio
             function askQuestionAndPlayAudio() {
@@ -198,14 +243,15 @@
                             cursorChar: "▊",
                         }).go();
                         // Change the image to the animated GIF when the voice-over starts
-                        $("#jollybeard-img").attr("src", "/static/bookworm.gif");
+                        $("#jollybeard-img").attr("src", "/static/looper.gif");
+                        $("#jollybeard-img").css("height", "312.5px");  // 250px * 1.25 = 312.5px
 
                         audioElement.src = fileURL;
                         audioElement.controls = true;
                         audioElement.play();
                         // Add an event listener to change the image back to static when the voice-over ends
                         audioElement.onended = function () {
-                            $("#jollybeard-img").attr("src", "/static/bookworm.png");
+                            $("#jollybeard-img").attr("src", "/static/sonic.png");
                         };
                         enableButton(recordButton);
                         recordButton[0].innerHTML = "Record";
