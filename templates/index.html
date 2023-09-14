@@ -84,7 +84,7 @@
 
             // Initialize TypeIt
             new TypeIt("#response-text", {
-                strings: "How can I help?",
+                strings: "Hold down the button while speaking, release when you are done.",
                 speed: 40,
                 waitUntilVisible: true,
                 cursorChar: "▊",
@@ -114,7 +114,7 @@
                         }).go();
                         // Change the image to the animated GIF when the voice-over starts
                         $("#jollybeard-img").attr("src", "/static/looper.gif");
-                        $("#jollybeard-img").css("height", "312.5px");  // 250px * 1.25 = 312.5px
+                        // $("#jollybeard-img").css("height", "312.5px");  // 250px * 1.25 = 312.5px
 
                         audioElement.src = fileURL;
                         audioElement.controls = true;
@@ -129,54 +129,6 @@
                     }
                 });
             });
-
-
-            // // Initialize MediaRecorder
-            // let chunks = [];
-            // let recording = false;
-            // let mediaRecorder;
-            // navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-            //     mediaRecorder = new MediaRecorder(stream);
-            //     mediaRecorder.ondataavailable = (event) => {
-            //         chunks.push(event.data);
-            //     };
-            //     mediaRecorder.onstop = () => {
-            //         disableButton(recordButton);
-            //         recordButton[0].innerHTML = "Transcribing...";
-            //         const audioData = new Blob(chunks, { type: 'audio/wav' });
-            //         const formData = new FormData();
-            //         formData.append('file', audioData, 'audio.wav');
-            //         $.ajax({
-            //             type: 'POST',
-            //             url: '/transcribe',
-            //             data: formData,
-            //             contentType: false,
-            //             processData: false,
-            //             success: (data) => {
-            //                 transcriptionBox.val(data.text);
-            //                 enableButton(recordButton);
-            //                 recordButton[0].innerHTML = "Record";
-            //                 // askButton.click();
-            //                 // Trigger the functionality that was previously tied to the "Ask" button
-            //                 askQuestionAndPlayAudio();
-            //             }
-            //         });
-            //     };
-            // });
-
-            // // Record audio when record button is clicked
-            // recordButton.click(() => {
-            //     if (recording) {
-            //         mediaRecorder.stop();
-            //         recording = false;
-            //     } else {
-            //         recordButton[0].innerHTML = "Recording...";
-            //         chunks = [];
-            //         mediaRecorder.start();
-            //         recording = true;
-            //     }
-            // });
-
 
             navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
                 mediaRecorder = new MediaRecorder(stream);
@@ -206,18 +158,63 @@
             });
 
             // Record audio when record button is pressed and held
-            recordButton.mousedown(() => {
+            // recordButton.mousedown(() => {
+            //     recordButton[0].innerHTML = "Recording...";
+            //     chunks = [];
+            //     mediaRecorder.start();
+            //     recording = true;
+            // });
+
+            // // Stop recording when record button is released
+            // recordButton.mouseup(() => {
+            //     mediaRecorder.stop();
+            //     recording = false;
+            // });
+
+            // Record audio when record button is pressed and held
+            // recordButton.on('mousedown touchstart', () => {
+            //     recordButton[0].innerHTML = "Recording...";
+            //     chunks = [];
+            //     mediaRecorder.start();
+            //     recording = true;
+            // });
+
+            // // Stop recording when record button is released
+            // recordButton.on('mouseup touchend', () => {
+            //     mediaRecorder.stop();
+            //     recording = false;
+            // });
+
+            // Helper function to handle the start of the recording
+            function startRecording() {
                 recordButton[0].innerHTML = "Recording...";
                 chunks = [];
                 mediaRecorder.start();
-                recording = true;
+            }
+
+            // Helper function to handle the end of the recording
+            function stopRecording() {
+                mediaRecorder.stop();
+            }
+
+            // Record audio when record button is pressed and held (desktop)
+            recordButton.on('mousedown', startRecording);
+
+            // Stop recording when record button is released (desktop)
+            recordButton.on('mouseup', stopRecording);
+
+            // Record audio when record button is touched and held (mobile)
+            recordButton.on('touchstart', function (event) {
+                event.preventDefault();  // Prevents mouse event from being triggered
+                startRecording();
             });
 
-            // Stop recording when record button is released
-            recordButton.mouseup(() => {
-                mediaRecorder.stop();
-                recording = false;
+            // Stop recording when touch is released (mobile)
+            recordButton.on('touchend', function (event) {
+                event.preventDefault();  // Prevents mouse event from being triggered
+                stopRecording();
             });
+
 
             // ... rest of the code
 
@@ -244,7 +241,7 @@
                         }).go();
                         // Change the image to the animated GIF when the voice-over starts
                         $("#jollybeard-img").attr("src", "/static/looper.gif");
-                        $("#jollybeard-img").css("height", "312.5px");  // 250px * 1.25 = 312.5px
+                        // $("#jollybeard-img").css("height", "312.5px");  // 250px * 1.25 = 312.5px
 
                         audioElement.src = fileURL;
                         audioElement.controls = true;
