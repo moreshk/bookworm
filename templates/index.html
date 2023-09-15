@@ -121,8 +121,11 @@
                         audioElement.play();
                         // Add an event listener to change the image back to static when the voice-over ends
                         audioElement.onended = function () {
+                            audioElement.pause();
+                            audioElement.currentTime = 0;
                             $("#jollybeard-img").attr("src", "/static/sonic.png");
                         };
+
                         enableButton(recordButton);
                         enableButton(askButton);
                         askButton[0].innerHTML = "Ask";
@@ -248,8 +251,11 @@
                         audioElement.play();
                         // Add an event listener to change the image back to static when the voice-over ends
                         audioElement.onended = function () {
+                            audioElement.pause();
+                            audioElement.currentTime = 0;
                             $("#jollybeard-img").attr("src", "/static/sonic.png");
                         };
+
                         enableButton(recordButton);
                         recordButton[0].innerHTML = "Record";
                     }
